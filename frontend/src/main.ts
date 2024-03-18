@@ -1,19 +1,19 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
-import App from './App.vue'
-import router from './router'
+import App from "./App.vue";
+import router from "./router";
 
-import AnimatedNumber from 'vue-3-animated-number'
+import AnimatedNumber from "vue-3-animated-number";
 
-import './scss/styles.scss'
+import "./scss/styles.scss";
 
-import { Modal } from 'bootstrap'
+import { Modal } from "bootstrap";
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
-app.use(AnimatedNumber)
+app.use(createPinia());
+app.use(router);
+app.use(AnimatedNumber);
 
-app.mount('#app')
+app.mount("#app");

@@ -1,39 +1,39 @@
 enum Activity {
-  Walking = 'chůze',
-  Running = 'běh',
-  Bicycle = 'kolo',
-  Scooter = 'koloběžka',
-  Unicycle = 'jednokolka',
-  Stairs = 'schody',
-  Gym = 'posilovna',
-  Swimming = 'plavání',
-  Skis = 'běžky',
-  Volleyball = 'odbíjená',
-  Basketball = 'košíková',
-  Football = 'kopaná',
-  Lial = 'lial',
-  Ringo = 'ringo',
-  Inline = 'inline',
-  Skateboard = 'skate/longboard'
+  Walking = "chůze",
+  Running = "běh",
+  Bicycle = "kolo",
+  Scooter = "koloběžka",
+  Unicycle = "jednokolka",
+  Stairs = "schody",
+  Gym = "posilovna",
+  Swimming = "plavání",
+  Skis = "běžky",
+  Volleyball = "odbíjená",
+  Basketball = "košíková",
+  Football = "kopaná",
+  Lial = "lial",
+  Ringo = "ringo",
+  Inline = "inline",
+  Skateboard = "skate/longboard",
 }
 const activityUnits = {
-  [Activity.Walking]: 'km',
-  [Activity.Running]: 'km',
-  [Activity.Bicycle]: 'km',
-  [Activity.Scooter]: 'km',
-  [Activity.Unicycle]: 'km',
-  [Activity.Stairs]: 'patro',
-  [Activity.Gym]: 'h',
-  [Activity.Swimming]: '100 m',
-  [Activity.Skis]: 'km',
-  [Activity.Volleyball]: 'h',
-  [Activity.Basketball]: 'h',
-  [Activity.Football]: 'h',
-  [Activity.Lial]: 'h',
-  [Activity.Ringo]: 'h',
-  [Activity.Inline]: 'km',
-  [Activity.Skateboard]: 'km'
-}
+  [Activity.Walking]: "km",
+  [Activity.Running]: "km",
+  [Activity.Bicycle]: "km",
+  [Activity.Scooter]: "km",
+  [Activity.Unicycle]: "km",
+  [Activity.Stairs]: "patro",
+  [Activity.Gym]: "h",
+  [Activity.Swimming]: "100 m",
+  [Activity.Skis]: "km",
+  [Activity.Volleyball]: "h",
+  [Activity.Basketball]: "h",
+  [Activity.Football]: "h",
+  [Activity.Lial]: "h",
+  [Activity.Ringo]: "h",
+  [Activity.Inline]: "km",
+  [Activity.Skateboard]: "km",
+};
 const activityCalorieConversion = {
   [Activity.Walking]: 80,
   [Activity.Running]: 20,
@@ -50,37 +50,44 @@ const activityCalorieConversion = {
   [Activity.Lial]: 10,
   [Activity.Ringo]: 43,
   [Activity.Inline]: 10,
-  [Activity.Skateboard]: 20
-}
+  [Activity.Skateboard]: 20,
+};
 
 interface ClassInfo {
-  id: number
-  name: string
-  studentIds: number[]
+  id: number;
+  name: string;
+  studentIds: number[];
 }
 
 interface TeamInfo {
-  id: number
-  name: string
-  description: string
-  memberIds: number[]
+  id: number;
+  name: string;
+  description: string;
+  memberIds: number[];
 }
 
 interface UserInfo {
-  id: number
-  name: string
-  nickname: string
-  email: string
-  teamId: number
-  classId: number
+  id: number;
+  name: string;
+  nickname: string;
+  email: string;
+  teamId: number;
+  classId: number;
 }
 
 interface ActivityInfo {
-  id: number
-  type: Activity | null
-  unitCount: number
-  userId: number
+  id: number;
+  type: Activity | null;
+  unitCount: number;
+  userId: number;
 }
 
-export type { ClassInfo, TeamInfo, UserInfo, ActivityInfo }
-export { Activity, activityUnits, activityCalorieConversion }
+interface InviteInfo {
+  id: number;
+  teamFrom: number;
+  userTo: number;
+  date: Date;
+}
+
+export type { ClassInfo, TeamInfo, UserInfo, ActivityInfo, InviteInfo };
+export { Activity, activityUnits, activityCalorieConversion };

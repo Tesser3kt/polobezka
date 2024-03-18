@@ -1,18 +1,19 @@
-@import 'bootstrap/scss/bootstrap';
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+@import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 @font-face {
-  font-family: 'Oswald';
-  src: url('../assets/fonts/Oswald-VariableFont_wght.ttf') format('truetype');
+  font-family: "Oswald";
+  src: url("../assets/fonts/Oswald-VariableFont_wght.ttf") format("truetype");
 }
 
 @font-face {
-  font-family: 'Roboto Slab';
-  src: url('../assets/fonts/RobotoSlab-VariableFont_wght.ttf') format('truetype');
+  font-family: "Roboto Slab";
+  src: url("../assets/fonts/RobotoSlab-VariableFont_wght.ttf")
+    format("truetype");
 }
 
 body {
   font: {
-    family: 'Roboto Slab', sans-serif;
+    family: "Roboto Slab", sans-serif;
     size: 1rem;
     weight: 400;
   }
@@ -25,13 +26,13 @@ h4,
 h5,
 h6 {
   font: {
-    family: 'Oswald', sans-serif;
+    family: "Oswald", sans-serif;
     weight: 600;
   }
 }
 .navbar-brand {
   font: {
-    family: 'Oswald', sans-serif;
+    family: "Oswald", sans-serif;
   }
   text-transform: uppercase;
 }
@@ -42,7 +43,7 @@ h6 {
 }
 .km-text {
   font: {
-    family: 'Oswald', sans-serif;
+    family: "Oswald", sans-serif;
     weight: 300;
   }
 }
@@ -54,4 +55,15 @@ h6 {
 .fade-leave-to {
   opacity: 0;
   transform: translateY(100px);
+}
+.invite-card {
+  @include media-breakpoint-up(md) {
+    width: 28rem;
+  }
+}
+.invite-button {
+  height: 2rem;
+  width: 2rem;
+  padding: 2px;
+  border-radius: 100%;
 }

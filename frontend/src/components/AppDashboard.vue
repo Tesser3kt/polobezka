@@ -1,59 +1,96 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import type { UserInfo, ClassInfo, TeamInfo } from '@/types'
-import { useUsersStore } from '@/stores/users'
-import { useActivitiesStore } from '@/stores/activities'
-import DashboardKilometres from './DashboardKilometres.vue'
-import DashboardTeam from './DashboardTeam.vue'
+import { ref, computed } from "vue";
+import type { UserInfo, ClassInfo, TeamInfo } from "@/types";
+import { useUsersStore } from "@/stores/users";
+import { useTeamsStore } from "@/stores/teams";
+import { useActivitiesStore } from "@/stores/activities";
+import { useInvitesStore } from "@/stores/invites";
+import DashboardKilometres from "./DashboardKilometres.vue";
+import DashboardTeam from "./DashboardTeam.vue";
+import DashboardInvites from "./DashboardInvites.vue";
 
 const props = defineProps<{
-  user?: UserInfo | null
-  class_?: ClassInfo | null
-  team?: TeamInfo | null
-}>()
+  user?: UserInfo | null;
+  class_?: ClassInfo | null;
+  team?: TeamInfo | null;
+}>();
 
-const usersStore = useUsersStore()
-const activitiesStore = useActivitiesStore()
+const usersStore = useUsersStore();
+const teamsStore = useTeamsStore();
+const activitiesStore = useActivitiesStore();
+const invitesStore = useInvitesStore();
+
+const userInTeam = ref(props.user?.teamId !== 0);
 
 const currentUserKm = computed(() => {
-  if (!props.user) return null
-  return activitiesStore.getUserKm(props.user.id)
-})
+  if (!props.user) return null;
+  return activitiesStore.getUserKm(props.user.id);
+});
 const currentClassKm = computed(() => {
-  if (!props.class_) return null
-  return activitiesStore.getClassKm(props.class_.id)
-})
+  if (!props.class_) return null;
+  return activitiesStore.getClassKm(props.class_.id);
+});
 const currentTeamKm = computed(() => {
-  if (!props.team) return null
-  return activitiesStore.getTeamKm(props.team.id)
-})
-const schoolKm = computed(() => activitiesStore.getTotalKm)
+  if (!props.team) return null;
+  return activitiesStore.getTeamKm(props.team.id);
+});
+const schoolKm = computed(() => activitiesStore.getTotalKm);
 
 const userNickAndKm = computed(() => {
-  if (!props.user) return null
-  return { nickname: props.user.nickname, km: currentUserKm.value }
-})
+  if (!props.user) return null;
+  return { nickname: props.user.nickname, km: currentUserKm.value };
+});
 const teamNicksAndKms = computed(() => {
-  if (!props.team) return null
+  if (!props.team) return null;
 
   return props.team.memberIds.map((id) => {
-    const user = usersStore.getUserById(id)
-    return { nickname: user?.nickname, km: activitiesStore.getUserKm(id) }
-  })
-})
+    const user = usersStore.getUserById(id);
+    return { nickname: user?.nickname, km: activitiesStore.getUserKm(id) };
+  });
+});
+
+const userInvites = computed(() => {
+  if (!props.user) return [];
+  const invites = invitesStore.getUserInvites(props.user.id);
+  return invites.map((invite) => {
+    const team = teamsStore.getTeamById(invite.teamFrom);
+    return { id: invite.id, teamName: team?.name, date: invite.date };
+  });
+});
+
+const leaveTeam = () => {
+  if (props.user && props.team) {
+    teamsStore.leaveTeam(props.user.id, props.team.id);
+    userInTeam.value = false;
+  }
+};
 </script>
 <template>
-  <DashboardKilometres
-    :currentUserId="props.user?.id"
-    :userKm="currentUserKm"
-    :classKm="currentClassKm"
-    :teamKm="currentTeamKm"
-    :schoolKm="schoolKm"
-  />
-  <DashboardTeam
-    v-if="props.team"
-    :user="userNickAndKm"
-    :teamName="props.team?.name"
-    :team="teamNicksAndKms"
-  />
+  <Transition name="fade" appear>
+    <div class="dashboard-km-wrapper">
+      <DashboardKilometres
+        :currentUserId="props.user?.id"
+        :userInTeam="userInTeam"
+        :userKm="currentUserKm"
+        :classKm="currentClassKm"
+        :teamKm="currentTeamKm"
+        :schoolKm="schoolKm"
+      />
+    </div>
+  </Transition>
+  <Transition name="fade" appear>
+    <div v-if="userInTeam" class="dashboard-team-wrapper">
+      <DashboardTeam
+        :user="userNickAndKm"
+        :teamName="props.team?.name"
+        :team="teamNicksAndKms"
+        @leave-team="leaveTeam"
+      />
+    </div>
+  </Transition>
+  <Transition name="fade" appear>
+    <div v-if="!userInTeam" class="dashboard-invites-wrapper mt-5">
+      <DashboardInvites :invites="userInvites" />
+    </div>
+  </Transition>
 </template>
