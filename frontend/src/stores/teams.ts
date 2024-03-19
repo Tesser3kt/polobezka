@@ -37,5 +37,14 @@ export const useTeamsStore = defineStore("teams", {
       const usersStore = useUsersStore();
       usersStore.updateUserTeam(userId, 0);
     },
+    joinTeam(userId: number, teamId: number) {
+      const team = this.getTeamById(teamId);
+      if (team) {
+        team.memberIds.push(userId);
+      }
+
+      const usersStore = useUsersStore();
+      usersStore.updateUserTeam(userId, teamId);
+    },
   },
 });

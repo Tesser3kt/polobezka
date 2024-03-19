@@ -47,6 +47,7 @@ h6 {
     weight: 300;
   }
 }
+.fade-move,
 .fade-enter-active,
 .fade-leave-active {
   transition: all 0.8s ease;
@@ -56,14 +57,42 @@ h6 {
   opacity: 0;
   transform: translateY(100px);
 }
+.fade-leave-active {
+  position: absolute;
+}
+.invite-list-move,
+.invite-list-enter-active,
+.invite-list-leave-active {
+  transition: all 0.8s ease;
+}
+.invite-list-leave-active {
+  position: absolute;
+}
+.invite-list-enter-from {
+  opacity: 0;
+  transform: translateY(100px);
+}
+.invite-list-leave-to {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+.invites-container,
 .invite-card {
-  @include media-breakpoint-up(md) {
-    width: 28rem;
+  width: 28rem;
+  @include media-breakpoint-only(xs) {
+    width: 20rem;
   }
+}
+.invite-card {
+  outline: 1px solid var(--bs-info);
+  border: 0;
 }
 .invite-button {
   height: 2rem;
   width: 2rem;
   padding: 2px;
   border-radius: 100%;
+}
+.card-text-small {
+  font-size: $font-size-sm;
 }

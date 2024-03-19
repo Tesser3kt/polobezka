@@ -8,6 +8,7 @@ import { useInvitesStore } from "@/stores/invites";
 import DashboardKilometres from "./DashboardKilometres.vue";
 import DashboardTeam from "./DashboardTeam.vue";
 import DashboardInvites from "./DashboardInvites.vue";
+import { join } from "path";
 
 const props = defineProps<{
   user?: UserInfo | null;
@@ -64,21 +65,28 @@ const leaveTeam = () => {
     userInTeam.value = false;
   }
 };
+const joinTeam = (inviteId: number) => {
+  const invite = invitesStore.getInviteById(inviteId);
+  if (invite && props.user) {
+    teamsStore.joinTeam(props.user.id, invite.teamFrom);
+    userInTeam.value = true;
+    invitesStore.deleteInvite(inviteId);
+  }
+};
 </script>
 <template>
-  <Transition name="fade" appear>
-    <div class="dashboard-km-wrapper">
-      <DashboardKilometres
-        :currentUserId="props.user?.id"
-        :userInTeam="userInTeam"
-        :userKm="currentUserKm"
-        :classKm="currentClassKm"
-        :teamKm="currentTeamKm"
-        :schoolKm="schoolKm"
-      />
-    </div>
-  </Transition>
-  <Transition name="fade" appear>
+  <TransitionGroup name="fade" tag="div" appear>
+    <Transition name="fade" appear>
+      <div class="dashboard-km-wrapper w-100">
+        <DashboardKilometres
+          :currentUserId="props.user?.id"
+          :userInTeam="userInTeam"
+          :userKm="currentUserKm"
+          :classKm="currentClassKm"
+          :teamKm="currentTeamKm"
+          :schoolKm="schoolKm"
+        /></div
+    ></Transition>
     <div v-if="userInTeam" class="dashboard-team-wrapper">
       <DashboardTeam
         :user="userNickAndKm"
@@ -87,10 +95,12 @@ const leaveTeam = () => {
         @leave-team="leaveTeam"
       />
     </div>
-  </Transition>
-  <Transition name="fade" appear>
     <div v-if="!userInTeam" class="dashboard-invites-wrapper mt-5">
-      <DashboardInvites :invites="userInvites" />
+      <DashboardInvites
+        :invites="userInvites"
+        @accept="joinTeam"
+        @decline="invitesStore.deleteInvite"
+      />
     </div>
-  </Transition>
+  </TransitionGroup>
 </template>

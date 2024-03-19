@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, defineEmits } from "vue";
+import { ref, computed, watch } from "vue";
 import { Modal } from "bootstrap";
 import YesNoModal from "./YesNoModal.vue";
 

@@ -43,7 +43,7 @@ export const useUsersStore = defineStore("users", {
       nickname: "6666666666666666",
       email: "user1@random.com",
       classId: 1,
-      teamId: 0,
+      teamId: 1,
     } as UserInfo | null,
   }),
   getters: {
