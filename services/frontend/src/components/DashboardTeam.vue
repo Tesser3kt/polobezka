@@ -20,14 +20,14 @@ const teamFull = computed(() => {
 
 const leaveTeamSignal = (): void => {
   const leaveTeamModal = Modal.getInstance(
-    document.getElementById("leaveTeamModal") as Element
+    document.getElementById("leaveTeamModal") as Element,
   );
   leaveTeamModal?.hide();
   emits("leave-team");
 };
 const inviteUserSignal = (nickname: string): void => {
   const inviteModal = Modal.getInstance(
-    document.getElementById("inviteModal") as Element
+    document.getElementById("inviteModal") as Element,
   );
   inviteModal?.hide();
   emits("invite-user", nickname);
@@ -39,7 +39,7 @@ watch(
     if (newVal !== oldVal) {
       prevUserKm.value = oldVal || 0;
     }
-  }
+  },
 );
 </script>
 <template>

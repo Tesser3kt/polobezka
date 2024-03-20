@@ -36,7 +36,7 @@ const warningText = computed(() => {
   return "";
 });
 const showWarning = computed(
-  () => warningText.value !== "" && saveClicked.value
+  () => warningText.value !== "" && saveClicked.value,
 );
 
 const correctActivity = computed(() => {
@@ -67,7 +67,7 @@ const handleSave = () => {
       activitiesStore.addActivity(
         props.userId,
         units,
-        activityInput.value as Activity
+        activityInput.value as Activity,
       );
     }
   }

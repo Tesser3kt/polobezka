@@ -78,6 +78,7 @@ interface ActivityInfo {
   type: Activity | null;
   unitCount: number;
   userId: number;
+  date: Date;
 }
 
 interface InviteInfo {

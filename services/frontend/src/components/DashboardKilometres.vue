@@ -22,7 +22,7 @@ watch(
     if (newVal !== oldVal) {
       prevUserKm.value = oldVal || 0;
     }
-  }
+  },
 );
 watch(
   () => props.classKm,
@@ -30,7 +30,7 @@ watch(
     if (newVal !== oldVal) {
       prevClassKm.value = oldVal || 0;
     }
-  }
+  },
 );
 watch(
   () => props.teamKm,
@@ -38,7 +38,7 @@ watch(
     if (newVal !== oldVal) {
       prevTeamKm.value = oldVal || 0;
     }
-  }
+  },
 );
 watch(
   () => props.schoolKm,
@@ -46,7 +46,7 @@ watch(
     if (newVal !== oldVal) {
       prevSchoolKm.value = oldVal || 0;
     }
-  }
+  },
 );
 
 const colNumber = computed(() => {

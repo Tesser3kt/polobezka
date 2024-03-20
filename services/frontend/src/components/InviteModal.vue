@@ -26,7 +26,7 @@ const warningText = computed(() => {
   return "";
 });
 const showWarning = computed(
-  () => warningText.value !== "" && inviteClicked.value
+  () => warningText.value !== "" && inviteClicked.value,
 );
 
 const handleInvite = () => {

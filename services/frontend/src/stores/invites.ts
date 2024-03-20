@@ -38,7 +38,7 @@ export const useInvitesStore = defineStore("invites", {
     },
     getInviteByTeamAndUser: (state) => (teamId: number, userId: number) => {
       return state.invites.find(
-        (i) => i.teamFrom === teamId && i.userTo === userId
+        (i) => i.teamFrom === teamId && i.userTo === userId,
       );
     },
   },

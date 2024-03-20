@@ -31,7 +31,7 @@ const warningText = computed(() => {
   return "";
 });
 const showWarning = computed(
-  () => warningText.value !== "" && createClicked.value
+  () => warningText.value !== "" && createClicked.value,
 );
 
 const handleCreate = () => {
