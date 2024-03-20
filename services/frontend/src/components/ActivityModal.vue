@@ -15,6 +15,7 @@ const activityInput = ref("");
 const showUnitsInput = ref(false);
 const unitsInput = ref("");
 const calorieInput = ref("");
+const saveClicked = ref(false);
 
 const warningText = computed(() => {
   if (calorieInput.value !== "" && unitsInput.value !== "") {
@@ -34,9 +35,8 @@ const warningText = computed(() => {
   }
   return "";
 });
-const saveClicked = ref(false);
 const showWarning = computed(
-  () => warningText.value !== "" && saveClicked.value,
+  () => warningText.value !== "" && saveClicked.value
 );
 
 const correctActivity = computed(() => {
@@ -67,7 +67,7 @@ const handleSave = () => {
       activitiesStore.addActivity(
         props.userId,
         units,
-        activityInput.value as Activity,
+        activityInput.value as Activity
       );
     }
   }
@@ -92,17 +92,17 @@ const hideModal = () => {
 <template>
   <div
     class="modal fade"
-    :id="props.id"
+    :id="id"
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     tabIndex="-1"
-    :aria-labelledby="`${props.id}Label`"
+    :aria-labelledby="`${id}Label`"
     aria-hidden="true"
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" :id="`${props.id}Label`">Nová činnost</h5>
+          <h5 class="modal-title" :id="`${id}Label`">Nová činnost</h5>
           <button
             type="button"
             class="btn-close"

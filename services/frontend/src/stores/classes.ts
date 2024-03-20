@@ -7,12 +7,12 @@ export const useClassesStore = defineStore("classes", {
       {
         id: 1,
         name: "1.A",
-        studentIds: [1, 2, 3],
+        studentIds: [1, 2, 3, 4],
       },
       {
         id: 2,
         name: "2.A",
-        studentIds: [4],
+        studentIds: [],
       },
     ] as ClassInfo[],
   }),

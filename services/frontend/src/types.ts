@@ -62,13 +62,11 @@ interface ClassInfo {
 interface TeamInfo {
   id: number;
   name: string;
-  description: string;
   memberIds: number[];
 }
 
 interface UserInfo {
   id: number;
-  name: string;
   nickname: string;
   email: string;
   teamId: number;

@@ -31,12 +31,10 @@ const currentUserTeam = computed(() => {
     />
   </header>
   <section class="kilometres mt-5">
-    <div class="container">
-      <AppDashboard
-        :user="currentUser"
-        :class_="currentUserClass"
-        :team="currentUserTeam"
-      />
-    </div>
+    <AppDashboard
+      :user="currentUser"
+      :class_="currentUserClass"
+      :team="currentUserTeam"
+    />
   </section>
 </template>

@@ -2,27 +2,35 @@
 import { ref, computed, watch } from "vue";
 import { Modal } from "bootstrap";
 import YesNoModal from "./YesNoModal.vue";
+import InviteModal from "./InviteModal.vue";
 
 const props = defineProps<{
   user: { nickname: string; km: number | null } | null;
   teamName: string | undefined;
   team: { nickname: string | undefined; km: number }[] | null;
+  maxTeamMembers: number;
 }>();
+const emits = defineEmits(["leave-team", "invite-user"]);
 
 const prevUserKm = ref(0);
-const maxTeamMembers = 4;
 
 const teamFull = computed(() => {
-  return props.team?.length === maxTeamMembers;
+  return props.team?.length === props.maxTeamMembers;
 });
 
-const emits = defineEmits(["leave-team"]);
 const leaveTeamSignal = (): void => {
   const leaveTeamModal = Modal.getInstance(
     document.getElementById("leaveTeamModal") as Element
   );
   leaveTeamModal?.hide();
   emits("leave-team");
+};
+const inviteUserSignal = (nickname: string): void => {
+  const inviteModal = Modal.getInstance(
+    document.getElementById("inviteModal") as Element
+  );
+  inviteModal?.hide();
+  emits("invite-user", nickname);
 };
 
 watch(
@@ -47,7 +55,7 @@ watch(
           <div
             v-for="member in props.team"
             :key="member.nickname"
-            class="col-12 px-5 col-sm-6 px-sm-3 col-md-4 px-md-2 col-lg-3 px-lg-2 px-xl-4 px-xxl-5"
+            class="member-header col-12 col-sm-6 px-sm-3 col-md-4 px-md-2 col-lg-3 px-lg-2 px-xl-4 px-xxl-5"
           >
             <div class="card">
               <div
@@ -59,7 +67,7 @@ watch(
                 "
               >
                 <h5
-                  class="card-title my-0 text-center"
+                  class="card-title my-0 text-start"
                   :class="
                     props.user?.nickname === member.nickname && 'text-light'
                   "
@@ -90,7 +98,12 @@ watch(
         role="group"
         aria="Team button group"
       >
-        <button v-if="!teamFull" class="btn btn-primary fs-5">
+        <button
+          v-if="!teamFull"
+          class="btn btn-primary fs-5"
+          data-bs-toggle="modal"
+          data-bs-target="#inviteModal"
+        >
           <i class="bi bi-person-plus"></i> Pozvat do týmu
         </button>
         <button v-else class="btn btn-secondary fs-5" disabled>
@@ -109,7 +122,12 @@ watch(
         role="group"
         aria="Team button group"
       >
-        <button v-if="!teamFull" class="btn btn-primary fs-5">
+        <button
+          v-if="!teamFull"
+          class="btn btn-primary fs-5 py-2"
+          data-bs-toggle="modal"
+          data-bs-target="#inviteModal"
+        >
           <i class="bi bi-person-plus"></i> Pozvat do týmu
         </button>
         <button v-else class="btn btn-secondary fs-5 py-2" disabled>
@@ -132,5 +150,12 @@ watch(
     title="Opustit tým"
     :message="`Opravdu chcete tým ${props?.teamName} opustit?`"
     @yes="leaveTeamSignal"
+  />
+
+  <!-- Invite Modal -->
+  <InviteModal
+    id="inviteModal"
+    :teamName="props.teamName"
+    @invite-user="inviteUserSignal"
   />
 </template>
