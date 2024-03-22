@@ -6,43 +6,7 @@ import { useTeamsStore } from "@/stores/teams";
 
 export const useActivitiesStore = defineStore("activities", {
   state: () => ({
-    activities: [
-      {
-        id: 1,
-        type: Activity.Walking,
-        unitCount: 100,
-        userId: 1,
-        date: new Date(),
-      },
-      {
-        id: 2,
-        type: Activity.Running,
-        unitCount: 200,
-        userId: 2,
-        date: new Date(),
-      },
-      {
-        id: 3,
-        type: Activity.Bicycle,
-        unitCount: 300,
-        userId: 3,
-        date: new Date(),
-      },
-      {
-        id: 4,
-        type: Activity.Football,
-        unitCount: 100,
-        userId: 4,
-        date: new Date(),
-      },
-      {
-        id: 5,
-        type: null,
-        unitCount: 500,
-        userId: 1,
-        date: new Date(),
-      },
-    ] as ActivityInfo[],
+    activities: [] as ActivityInfo[],
   }),
   getters: {
     getActivityById: (state) => (id: number) => {

@@ -3,26 +3,7 @@ import type { InviteInfo } from "@/types";
 
 export const useInvitesStore = defineStore("invites", {
   state: () => ({
-    invites: [
-      {
-        id: 4,
-        teamFrom: 1,
-        userTo: 1,
-        date: new Date(2023, 11, 10, 20, 30),
-      },
-      {
-        id: 5,
-        teamFrom: 2,
-        userTo: 1,
-        date: new Date(2024, 3, 1, 14, 35),
-      },
-      {
-        id: 8,
-        teamFrom: 2,
-        userTo: 1,
-        date: new Date(2024, 3, 1, 17, 35),
-      },
-    ] as InviteInfo[],
+    invites: [] as InviteInfo[],
     maxInvitesToUser: 5,
     maxInvitesFromTeam: 5,
   }),
@@ -38,7 +19,7 @@ export const useInvitesStore = defineStore("invites", {
     },
     getInviteByTeamAndUser: (state) => (teamId: number, userId: number) => {
       return state.invites.find(
-        (i) => i.teamFrom === teamId && i.userTo === userId,
+        (i) => i.teamFrom === teamId && i.userTo === userId
       );
     },
   },

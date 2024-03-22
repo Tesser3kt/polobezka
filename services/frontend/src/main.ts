@@ -21,7 +21,7 @@ axios.defaults.baseURL = "http://localhost:5000/";
 app.use(createPinia());
 app.use(router);
 app.use(vue3GoogleLogin, {
-  clientId: "YOUR_GOOGLE_CLIENT_ID",
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
 });
 app.use(AnimatedNumber);
 

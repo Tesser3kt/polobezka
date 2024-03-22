@@ -3,18 +3,7 @@ import type { ClassInfo } from "@/types";
 
 export const useClassesStore = defineStore("classes", {
   state: () => ({
-    classes: [
-      {
-        id: 1,
-        name: "1.A",
-        studentIds: [1, 2, 3, 4],
-      },
-      {
-        id: 2,
-        name: "2.A",
-        studentIds: [],
-      },
-    ] as ClassInfo[],
+    classes: [] as ClassInfo[],
   }),
   getters: {
     getClassById: (state) => (id: number) => {

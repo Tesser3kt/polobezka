@@ -5,18 +5,7 @@ import type { TeamInfo } from "@/types";
 
 export const useTeamsStore = defineStore("teams", {
   state: () => ({
-    teams: [
-      {
-        id: 1,
-        name: "6666666666666666",
-        memberIds: [1],
-      },
-      {
-        id: 2,
-        name: "Team 2",
-        memberIds: [3, 4],
-      },
-    ] as TeamInfo[],
+    teams: [] as TeamInfo[],
     maxMembers: 4,
     minCharactersInName: 4,
     maxCharactersInName: 16,
