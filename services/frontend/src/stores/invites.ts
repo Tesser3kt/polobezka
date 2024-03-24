@@ -80,8 +80,8 @@ export const useInvitesStore = defineStore("invites", {
       } else {
         await axios
           .post("/api/invite/", {
-            team_from: teamId,
-            user_to: userId,
+            team_from_id: teamId,
+            user_to_id: userId,
           })
           .then((response) => {
             if (response.status === 200) {

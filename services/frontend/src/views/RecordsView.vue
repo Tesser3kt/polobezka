@@ -86,7 +86,7 @@ const deleteRecord = async (id: number) => {
   </header>
   <Transition name="fade" appear>
     <section class="records mt-5">
-      <div class="records-wrapper container text-center">
+      <div class="records-wrapper container-xl text-center">
         <h2 class="text-center text-primary mb-4">Záznamy činností</h2>
         <div
           v-if="!currentUserActivities || currentUserActivities?.length === 0"
@@ -126,11 +126,11 @@ const deleteRecord = async (id: number) => {
                 :class="index === 0 ? 'show' : ''"
                 data-bs-parent="#recordsAccordion"
               >
-                <div class="accordion-body container">
+                <div class="accordion-body container-xl">
                   <TransitionGroup
                     name="record-list"
                     tag="div"
-                    class="mb-0 mx-auto row row-cols-4 row-gap-4"
+                    class="mb-0 mx-auto row row-cols-1 row-cols-md-2 row-cols-lg-3 row-gap-4"
                   >
                     <div
                       v-for="record in week.activities"

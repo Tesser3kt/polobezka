@@ -54,7 +54,6 @@ export const useTeamsStore = defineStore("teams", {
           name,
         })
         .then(async (response) => {
-          console.log(response);
           if (response.status === 200) {
             this.teams.push({
               id: response.data.id,
@@ -66,12 +65,12 @@ export const useTeamsStore = defineStore("teams", {
         });
     },
     async deleteTeam(teamId: number) {
+      const invitesStore = useInvitesStore();
+      await invitesStore.deleteInvitesByTeam(teamId);
+
       await axios.delete(`/api/team/${teamId}/`).then(async (response) => {
         if (response.status === 200) {
           this.teams = this.teams.filter((t) => t.id !== teamId);
-
-          const invitesStore = useInvitesStore();
-          await invitesStore.deleteInvitesByTeam(teamId);
         }
       });
     },
@@ -87,14 +86,14 @@ export const useTeamsStore = defineStore("teams", {
       const usersStore = useUsersStore();
       await usersStore.updateUserTeam(userId, null);
     },
-    joinTeam(userId: number, teamId: number) {
+    async joinTeam(userId: number, teamId: number) {
       const team = this.getTeamById(teamId);
       if (team) {
         team.memberIds.push(userId);
       }
 
       const usersStore = useUsersStore();
-      usersStore.updateUserTeam(userId, teamId);
+      await usersStore.updateUserTeam(userId, teamId);
     },
   },
 });

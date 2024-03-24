@@ -1,12 +1,55 @@
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import logoUrl from "@/assets/imgs/logo.png";
-import { onMounted } from "vue";
+import { Modal } from "bootstrap";
+import NicknameModal from "./NicknameModal.vue";
+import ErrorModal from "./ErrorModal.vue";
+import { useUsersStore } from "@/stores/users";
 
 const props = defineProps<{
   user?: string;
   class_?: string;
   team?: string;
 }>();
+
+const usersStore = useUsersStore();
+
+const emits = defineEmits(["logout"]);
+
+const userNick = ref(props.user);
+const errorMessage = ref("");
+const showErrorModal = (message: string) => {
+  errorMessage.value = message;
+  const modal = new Modal(
+    document.getElementById("headerErrorModal") as Element
+  );
+  modal?.show();
+};
+const nicknameSet = async (nickname: string) => {
+  const responseData = await usersStore.setNickname(nickname);
+  if (!responseData) {
+    showErrorModal("Nastavení přezdívky selhalo.");
+    return;
+  }
+  if (responseData?.error) {
+    showErrorModal(responseData.error);
+    return;
+  }
+
+  const modal = Modal.getInstance(
+    document.getElementById("headerNicknameModal") as Element
+  );
+  modal?.hide();
+  errorMessage.value = "";
+  userNick.value = nickname;
+};
+
+watch(
+  () => props.user,
+  () => {
+    userNick.value = props.user;
+  }
+);
 </script>
 
 <template>
@@ -46,10 +89,7 @@ const props = defineProps<{
             >
           </li>
         </ul>
-        <div
-          v-if="props.user"
-          class="user-data d-inline-flex align-items-center"
-        >
+        <div v-if="userNick" class="user-data d-inline-flex align-items-center">
           <p className="mb-0 d-inline-flex align-items-center">
             <span class="d-none d-md-block fs-5" v-if="props.class_">{{
               props.class_
@@ -65,10 +105,19 @@ const props = defineProps<{
               v-if="props.team"
               class="bi bi-dot text-body-tertiary fs-4 mt-1 d-none d-md-block"
             ></i>
-            <span class="fs-5">{{ props.user }}</span>
+            <span class="fs-5">{{ userNick }}</span>
           </p>
           <button
-            class="btn btn-outline-danger ms-sm-4 ms-2"
+            type="button"
+            class="btn btn-outline-primary ms-sm-4 ms-2"
+            data-bs-toggle="modal"
+            data-bs-target="#headerNicknameModal"
+          >
+            <i class="bi bi-pencil-square"></i>
+            <span class="d-none d-sm-inline-block ms-2">Změnit nick</span>
+          </button>
+          <button
+            class="btn btn-outline-danger ms-sm-2 ms-2"
             @click="$emit('logout')"
           >
             <i class="bi bi-box-arrow-in-right logout-icon"></i>
@@ -78,4 +127,14 @@ const props = defineProps<{
       </div>
     </div>
   </nav>
+
+  <!-- Nickname Modal -->
+  <NicknameModal
+    id="headerNicknameModal"
+    :show-info="false"
+    @set-nickname="nicknameSet"
+  />
+
+  <!-- Error Modal -->
+  <ErrorModal id="headerErrorModal" :message="errorMessage" />
 </template>

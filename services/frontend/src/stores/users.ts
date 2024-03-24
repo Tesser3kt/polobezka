@@ -43,7 +43,7 @@ export const useUsersStore = defineStore("users", {
     },
     async getUserByEmail(email: string) {
       return await axios
-        .get(`/api/user/?user_info=${email}`)
+        .get(`/api/user/?email=${email}`)
         .then((response) => {
           return response.data;
         })
@@ -60,7 +60,6 @@ export const useUsersStore = defineStore("users", {
           team_id: this.currentUser?.teamId,
         })
         .then((response) => {
-          console.log("Nickname updated", response.data);
           return response.data;
         })
         .catch((error) => {
@@ -71,9 +70,27 @@ export const useUsersStore = defineStore("users", {
       if (!userId) {
         return;
       }
-      this.currentUser = this.getUserById(userId);
 
-      $cookies?.set("currentUser", this.currentUser?.id);
+      await axios
+        .get(`/api/user/${userId}/`)
+        .then((response) => {
+          if (response.status === 200 && response.data) {
+            this.currentUser = {
+              id: response.data.id,
+              nickname: response.data.nickname,
+              email: response.data.email,
+              classId: response.data.class_id,
+              teamId: response.data.team_id,
+            };
+            if (!this.currentUser) {
+              return;
+            }
+            $cookies?.set("currentUser", this.currentUser?.id, "1d");
+          }
+        })
+        .catch((error) => {
+          return null;
+        });
     },
     async logoutUser() {
       this.currentUser = undefined;
@@ -93,7 +110,6 @@ export const useUsersStore = defineStore("users", {
           .then((response) => {
             if (response.status === 200) {
               user.teamId = teamId;
-              console.log(this.users);
               if (this.currentUser?.id === userId) {
                 this.currentUser.teamId = teamId;
               }
@@ -107,7 +123,6 @@ export const useUsersStore = defineStore("users", {
     resetCurrentUser() {
       if (this.currentUser) {
         this.currentUser = this.getUserById(this.currentUser.id);
-        console.log("Current user reset", this.currentUser);
       }
     },
   },

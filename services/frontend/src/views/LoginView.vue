@@ -105,6 +105,7 @@ const callback = async (response) => {
   <!-- Nickname Modal -->
   <NicknameModal
     id="nicknameModal"
+    :showInfo="true"
     @set-nickname="nicknameSet"
     @cancel="nicknameCancel"
   />

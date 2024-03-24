@@ -4,6 +4,7 @@ import { useUsersStore } from "@/stores/users";
 
 const props = defineProps<{
   id: string;
+  showInfo: boolean;
 }>();
 
 const usersStore = useUsersStore();
@@ -16,16 +17,17 @@ const userNicknames = computed(() => {
   return usersStore.users.map((user) => user.nickname);
 });
 const warningText = computed(() => {
-  if (nicknameInput.value === "") {
+  const nickname = nicknameInput.value.trim();
+  if (nickname === "") {
     return "Vyplňte přezdívku.";
   }
-  if (userNicknames.value.includes(nicknameInput.value)) {
+  if (userNicknames.value.includes(nickname)) {
     return "Přezdívka je již obsazena.";
   }
-  if (nicknameInput.value.length < usersStore.minNicknameLength) {
+  if (nickname.length < usersStore.minNicknameLength) {
     return `Přezdívka musí mít alespoň ${usersStore.minNicknameLength} znaky.`;
   }
-  if (nicknameInput.value.length > usersStore.maxNicknameLength) {
+  if (nickname.length > usersStore.maxNicknameLength) {
     return `Přezdívka smí mít maximálně ${usersStore.maxNicknameLength} znaků.`;
   }
   return "";
@@ -39,7 +41,7 @@ const handleSet = () => {
   if (warningText.value !== "") {
     return;
   }
-  emits("set-nickname", nicknameInput.value);
+  emits("set-nickname", nicknameInput.value.trim());
   clearForm();
 };
 const clearForm = () => {
@@ -87,7 +89,7 @@ const clearForm = () => {
                 aria-describedby="nicknameHelp"
                 required
               />
-              <div id="nicknameHelp" class="form-text">
+              <div v-show="showInfo" id="nicknameHelp" class="form-text">
                 Bez nastavení přezdívky nelze pokračovat. Lze ji změnit později.
               </div>
             </div>

@@ -5,6 +5,7 @@ import ActivityModal from "./ActivityModal.vue";
 const props = defineProps<{
   currentUserId: number | undefined;
   userInTeam: boolean;
+  userInClass: boolean;
   userKm?: number | null;
   classKm?: number | null;
   teamKm?: number | null;
@@ -22,7 +23,7 @@ watch(
     if (newVal !== oldVal) {
       prevUserKm.value = oldVal || 0;
     }
-  },
+  }
 );
 watch(
   () => props.classKm,
@@ -30,7 +31,7 @@ watch(
     if (newVal !== oldVal) {
       prevClassKm.value = oldVal || 0;
     }
-  },
+  }
 );
 watch(
   () => props.teamKm,
@@ -38,7 +39,7 @@ watch(
     if (newVal !== oldVal) {
       prevTeamKm.value = oldVal || 0;
     }
-  },
+  }
 );
 watch(
   () => props.schoolKm,
@@ -46,12 +47,12 @@ watch(
     if (newVal !== oldVal) {
       prevSchoolKm.value = oldVal || 0;
     }
-  },
+  }
 );
 
 const colNumber = computed(() => {
-  if (props.userInTeam && props.classKm) return 4;
-  if (props.userInTeam || props.classKm) return 3;
+  if (props.userInTeam && props.userInClass) return 4;
+  if (props.userInTeam || props.userInClass) return 3;
   return 2;
 });
 </script>
@@ -92,7 +93,7 @@ const colNumber = computed(() => {
             </p>
           </div>
           <div
-            v-if="classKm"
+            v-if="userInClass"
             class="col d-flex flex-column justify-content-center"
           >
             <h4 class="fs-3 text-center text-warning-emphasis">Třída</h4>

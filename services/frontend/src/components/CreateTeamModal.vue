@@ -16,22 +16,23 @@ const teamNames = computed(() => {
   return teamsStore.teams.map((team) => team.name);
 });
 const warningText = computed(() => {
-  if (nameInput.value === "") {
+  const name = nameInput.value.trim();
+  if (name === "") {
     return "Vyplňte jméno týmu.";
   }
-  if (teamNames.value.includes(nameInput.value)) {
+  if (teamNames.value.includes(name)) {
     return "Tým s tímto jménem již existuje.";
   }
-  if (nameInput.value.length < teamsStore.minCharactersInName) {
+  if (name.length < teamsStore.minCharactersInName) {
     return `Jméno týmu musí mít alespoň ${teamsStore.minCharactersInName} znaky.`;
   }
-  if (nameInput.value.length > teamsStore.maxCharactersInName) {
+  if (name.length > teamsStore.maxCharactersInName) {
     return `Jméno týmu může mít maximálně ${teamsStore.maxCharactersInName} znaků.`;
   }
   return "";
 });
 const showWarning = computed(
-  () => warningText.value !== "" && createClicked.value,
+  () => warningText.value !== "" && createClicked.value
 );
 
 const handleCreate = () => {

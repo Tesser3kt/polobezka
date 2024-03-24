@@ -1,5 +1,8 @@
 import os
 import csv
+import pytz
+from datetime import datetime
+from random import choice
 from sqlmodel import Session, select
 
 from .models import *
@@ -67,4 +70,28 @@ def insert_teachers(engine) -> None:
             if not teacher.email:
                 continue
             session.add(teacher)
+        session.commit()
+
+
+def random_populate_teams(engine) -> None:
+    with Session(engine) as session:
+        for _ in range(100):
+            team = Team(
+                name="".join(choice("abcdefghijklmnopqrstuvwxyz") for _ in range(10)),
+            )
+            session.add(team)
+        session.commit()
+
+
+def random_populate_invites(engine) -> None:
+    with Session(engine) as session:
+        user_ids = session.exec(select(User.id)).all()
+        team_ids = session.exec(select(Team.id)).all()
+        for _ in range(1000):
+            invite = Invite(
+                user_to_id=choice(user_ids),
+                team_from_id=choice(team_ids),
+                date=datetime.now(pytz.timezone("Europe/Prague")),
+            )
+            session.add(invite)
         session.commit()

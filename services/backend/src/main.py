@@ -1,5 +1,6 @@
 import os
 import json
+import pytz
 from datetime import datetime
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
@@ -8,7 +9,12 @@ from sqlmodel import SQLModel, create_engine, Session, select
 from sqlalchemy.engine import URL
 
 from .models import *
-from .populate_db import insert_students, insert_teachers
+from .populate_db import (
+    insert_students,
+    insert_teachers,
+    random_populate_invites,
+    random_populate_teams,
+)
 
 app = FastAPI()
 
@@ -33,6 +39,7 @@ url_object = URL.create(
     database=DB_DATABASE,
 )
 engine = create_engine(url_object)
+tz = pytz.timezone("Europe/Prague")
 
 
 @app.get("/")
@@ -75,17 +82,20 @@ async def read_invites():
     return invites
 
 
-@app.get("/api/user/")
-async def read_user(user_info: int | str):
-    if isinstance(user_info, int):
-        query = select(User).where(User.id == user_info)
-    elif isinstance(user_info, str):
-        query = select(User).where(User.email == user_info)
+@app.get("/api/user/{id}/")
+async def read_user(id: int):
+    with Session(engine) as session:
+        user = session.exec(select(User).where(User.id == id)).first()
+    if user:
+        return user
     else:
         return {"error": "Uživatel nebyl nalezen."}
 
+
+@app.get("/api/user/")
+async def read_user(email: str):
     with Session(engine) as session:
-        user = session.exec(query).first()
+        user = session.exec(select(User).where(User.email == email)).first()
     if user:
         return user
     else:
@@ -175,7 +185,7 @@ async def create_activity(request: Request):
         try:
             user = session.exec(select(User).where(User.id == data["user_id"])).first()
             if user:
-                activity = Activity(**data)
+                activity = Activity(**data, date=datetime.now(tz=tz))
                 session.add(activity)
                 session.commit()
                 return {
@@ -210,7 +220,7 @@ async def renew_invite(invite_id: int):
     with Session(engine) as session:
         invite = session.exec(select(Invite).where(Invite.id == invite_id)).first()
         if invite:
-            invite.date = datetime.now()
+            invite.date = datetime.now(tz=tz)
             session.add(invite)
             session.commit()
             return invite
@@ -231,7 +241,7 @@ async def create_invite(request: Request):
                 select(User).where(User.id == data["user_to_id"])
             ).first()
             if team_from and user_to:
-                invite = Invite(**data)
+                invite = Invite(**data, date=datetime.now(tz=tz))
                 session.add(invite)
                 session.commit()
                 return {
@@ -262,4 +272,6 @@ if __name__ == "__main__":
     # SQLModel.metadata.create_all(engine)
     # insert_students(engine)
     # insert_teachers(engine)
+    # random_populate_teams(engine)
+    # random_populate_invites(engine)
     ...

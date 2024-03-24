@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useUsersStore } from "./stores/users";
-import { useClassesStore } from "./stores/classes";
-import { useTeamsStore } from "./stores/teams";
-import { useActivitiesStore } from "./stores/activities";
-import { useInvitesStore } from "./stores/invites";
+import { useUsersStore } from "@/stores/users";
+import { useClassesStore } from "@/stores/classes";
+import { useTeamsStore } from "@/stores/teams";
+import { useActivitiesStore } from "@/stores/activities";
+import { useInvitesStore } from "@/stores/invites";
 import type {
   UserInfo,
   ClassInfo,
@@ -12,7 +12,7 @@ import type {
   ActivityInfo,
   InviteInfo,
   Activity,
-} from "./types";
+} from "@/types";
 
 const usersStore = useUsersStore();
 const classesStore = useClassesStore();
@@ -62,7 +62,7 @@ const fetchClasses = async () => {
       return {
         id: class_.id,
         name: class_.name,
-        studentsIds: usersStore
+        studentIds: usersStore
           .getUsersByClassId(class_.id)
           .map((user) => user.id),
       };
@@ -161,18 +161,5 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div
-    v-if="error || loading"
-    class="container min-vh-100 d-flex align-items-center justify-content-center"
-  >
-    <div v-show="error" class="alert alert-danger" role="alert">
-      <i class="bi bi-exclamation-diamond"></i> {{ errorMessage }}
-    </div>
-    <div v-show="loading" class="bg-body-secondary rounded-3 p-4">
-      <div class="spinner-border text-primary">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  </div>
-  <router-view v-else />
+  <router-view />
 </template>

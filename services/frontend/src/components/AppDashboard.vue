@@ -22,6 +22,7 @@ const teamsStore = useTeamsStore();
 const activitiesStore = useActivitiesStore();
 const invitesStore = useInvitesStore();
 
+const userInClass = ref(props.user?.classId !== null);
 const userInTeam = ref(props.user?.teamId !== null);
 const errorMessage = ref("");
 
@@ -67,13 +68,13 @@ const leaveTeam = async () => {
     userInTeam.value = false;
   }
 };
-const joinTeam = (inviteId: number) => {
+const joinTeam = async (inviteId: number) => {
   const invite = invitesStore.getInviteById(inviteId);
   if (invite && props.user) {
-    teamsStore.joinTeam(props.user.id, invite.teamFrom);
+    await teamsStore.joinTeam(props.user.id, invite.teamFrom);
+    await invitesStore.deleteInvite(inviteId);
+    await invitesStore.deleteInvitesToUser(props.user.id);
     userInTeam.value = true;
-    invitesStore.deleteInvite(inviteId);
-    invitesStore.deleteInvitesToUser(props.user.id);
   }
 };
 
@@ -135,6 +136,7 @@ const handleCreateTeam = async (teamName: string) => {
         <div class="dashboard-km-wrapper container">
           <DashboardKilometres
             :currentUserId="props.user?.id"
+            :userInClass="userInClass"
             :userInTeam="userInTeam"
             :userKm="currentUserKm"
             :classKm="currentClassKm"
@@ -173,5 +175,5 @@ const handleCreateTeam = async (teamName: string) => {
   </TransitionGroup>
 
   <!-- Error Modal -->
-  <ErrorModal id="errorModal" title="Chyba" :message="errorMessage" />
+  <ErrorModal id="errorModal" :message="errorMessage" />
 </template>
