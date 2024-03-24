@@ -22,7 +22,7 @@ const teamsStore = useTeamsStore();
 const activitiesStore = useActivitiesStore();
 const invitesStore = useInvitesStore();
 
-const userInTeam = ref(props.user?.teamId !== 0);
+const userInTeam = ref(props.user?.teamId !== null);
 const errorMessage = ref("");
 
 const currentUserKm = computed(() => {
@@ -61,7 +61,7 @@ const userInvites = computed(() => {
   });
 });
 
-const leaveTeam = () => {
+const leaveTeam = async () => {
   if (props.user && props.team) {
     teamsStore.leaveTeam(props.user.id, props.team.id);
     userInTeam.value = false;
@@ -77,14 +77,13 @@ const joinTeam = (inviteId: number) => {
   }
 };
 
-const inviteUser = (nickname: string) => {
+const inviteUser = async (nickname: string) => {
   if (props.team && props.user) {
     // Too many invites from team
     if (
       invitesStore.getTeamInvites(props.team.id).length >=
       invitesStore.maxInvitesFromTeam
     ) {
-      console.log("Too many invites from team");
       showErrorModal("Tým má příliš mnoho odeslaných pozvánek.");
       return;
     }
@@ -93,15 +92,13 @@ const inviteUser = (nickname: string) => {
     if (!userTo) return;
 
     // User already in some team
-    if (userTo.teamId !== 0) {
-      console.log("User already in some team");
+    if (userTo.teamId !== null) {
       showErrorModal("Uživatel je již v týmu.");
       return;
     }
 
     // User was already invited
     if (invitesStore.getInviteByTeamAndUser(props.team.id, userTo.id)) {
-      console.log("User was already invited");
       showErrorModal("Uživatel byl již pozván.");
       return;
     }
@@ -111,11 +108,10 @@ const inviteUser = (nickname: string) => {
       invitesStore.getUserInvites(userTo.id).length >=
       invitesStore.maxInvitesToUser
     ) {
-      console.log("Too many invites to user");
       showErrorModal("Uživatel dostal příliš mnoho pozvánek.");
       return;
     }
-    invitesStore.sendInvite(props.team.id, userTo.id);
+    await invitesStore.sendInvite(props.team.id, userTo.id);
   }
 };
 const showErrorModal = (message: string) => {
@@ -124,11 +120,11 @@ const showErrorModal = (message: string) => {
   modal?.show();
 };
 
-const handleCreateTeam = (teamName: string) => {
+const handleCreateTeam = async (teamName: string) => {
   if (props.user) {
-    teamsStore.createTeam(props.user.id, teamName);
+    await teamsStore.createTeam(props.user.id, teamName);
+    await invitesStore.deleteInvitesToUser(props.user.id);
     userInTeam.value = true;
-    invitesStore.deleteInvitesToUser(props.user.id);
   }
 };
 </script>

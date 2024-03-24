@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import logoUrl from "@/assets/imgs/logo.png";
+import { onMounted } from "vue";
 
 const props = defineProps<{
   user?: string;
@@ -9,7 +10,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <nav class="navbar bg-body-tertiary">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid px-3 px-sm-4">
       <a href="#" class="navbar-brand d-inline-flex align-items-center fs-4">
         <img
@@ -21,31 +22,59 @@ const props = defineProps<{
         />
         Poloběžka
       </a>
-      <div v-if="props.user" class="user-data d-inline-flex align-items-center">
-        <p className="mb-0 d-inline-flex align-items-center">
-          <span class="d-none d-md-block fs-5" v-if="props.class_">{{
-            props.class_
-          }}</span>
-          <i
-            v-if="props.class_"
-            class="bi bi-dot text-body-tertiary fs-3 mt-1 d-none d-md-block"
-          ></i>
-          <span class="d-none d-md-block fs-5" v-if="props.team">{{
-            props.team
-          }}</span>
-          <i
-            v-if="props.team"
-            class="bi bi-dot text-body-tertiary fs-4 mt-1 d-none d-md-block"
-          ></i>
-          <span class="fs-5">{{ props.user }}</span>
-        </p>
-        <button
-          class="btn btn-outline-danger ms-sm-4 ms-2"
-          @click="$emit('logout')"
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <router-link :to="{ name: 'home' }" class="nav-link active"
+              >Domů</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'records' }" class="nav-link active"
+              >Záznamy</router-link
+            >
+          </li>
+        </ul>
+        <div
+          v-if="props.user"
+          class="user-data d-inline-flex align-items-center"
         >
-          <i class="bi bi-box-arrow-in-right logout-icon"></i>
-          <span class="d-none d-sm-inline-block ms-2">Odhlásit</span>
-        </button>
+          <p className="mb-0 d-inline-flex align-items-center">
+            <span class="d-none d-md-block fs-5" v-if="props.class_">{{
+              props.class_
+            }}</span>
+            <i
+              v-if="props.class_"
+              class="bi bi-dot text-body-tertiary fs-3 mt-1 d-none d-md-block"
+            ></i>
+            <span class="d-none d-md-block fs-5" v-if="props.team">{{
+              props.team
+            }}</span>
+            <i
+              v-if="props.team"
+              class="bi bi-dot text-body-tertiary fs-4 mt-1 d-none d-md-block"
+            ></i>
+            <span class="fs-5">{{ props.user }}</span>
+          </p>
+          <button
+            class="btn btn-outline-danger ms-sm-4 ms-2"
+            @click="$emit('logout')"
+          >
+            <i class="bi bi-box-arrow-in-right logout-icon"></i>
+            <span class="d-none d-sm-inline-block ms-2">Odhlásit</span>
+          </button>
+        </div>
       </div>
     </div>
   </nav>

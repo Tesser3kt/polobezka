@@ -20,6 +20,7 @@
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
     "vue-3-animated-number": "^0.0.7",
+    "vue-cookies": "^1.8.3",
     "vue-router": "^4.3.0",
     "vue3-google-login": "^2.0.26"
   },

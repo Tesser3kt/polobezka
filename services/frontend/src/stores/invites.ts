@@ -1,3 +1,4 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 import type { InviteInfo } from "@/types";
 
@@ -24,29 +25,77 @@ export const useInvitesStore = defineStore("invites", {
     },
   },
   actions: {
-    deleteInvite(inviteId: number) {
-      this.invites = this.invites.filter((i) => i.id !== inviteId);
+    async fetchInvites() {
+      return await axios
+        .get("/api/invites/")
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          return null;
+        });
     },
-    deleteInvitesByTeam(teamId: number) {
-      console.log("deleting invites by team", teamId);
-      this.invites = this.invites.filter((i) => i.teamFrom !== teamId);
+    async setInvites(invites: InviteInfo[]) {
+      this.invites = invites;
     },
-    deleteInvitesToUser(userId: number) {
-      this.invites = this.invites.filter((i) => i.userTo !== userId);
+    async deleteInvite(inviteId: number) {
+      await axios
+        .delete(`/api/invite/${inviteId}/`)
+        .then((response) => {
+          if (response.status === 200) {
+            this.invites = this.invites.filter((i) => i.id !== inviteId);
+          }
+        })
+        .catch((error) => {
+          console.error("Error deleting invite", error);
+        });
     },
-    sendInvite(teamId: number, userId: number) {
+    async deleteInvitesByTeam(teamId: number) {
+      const invitesToDelete = this.invites.filter((i) => i.teamFrom === teamId);
+
+      for (const invite of invitesToDelete) {
+        await this.deleteInvite(invite.id);
+      }
+    },
+    async deleteInvitesToUser(userId: number) {
+      const invitesToDelete = this.invites.filter((i) => i.userTo === userId);
+
+      for (const invite of invitesToDelete) {
+        await this.deleteInvite(invite.id);
+      }
+    },
+    async sendInvite(teamId: number, userId: number) {
       const invite = this.getInviteByTeamAndUser(teamId, userId);
       if (invite) {
-        invite.date = new Date();
+        await axios
+          .put(`/api/invite/${invite.id}/`)
+          .then((response) => {
+            if (response.status === 200) {
+              invite.date = response.data.date;
+            }
+          })
+          .catch((error) => {
+            console.error("Error updating invite", error);
+          });
       } else {
-        const freeId =
-          this.invites.map((i) => i.id).reduce((a, b) => Math.max(a, b), 0) + 1;
-        this.invites.push({
-          id: freeId,
-          teamFrom: teamId,
-          userTo: userId,
-          date: new Date(),
-        });
+        await axios
+          .post("/api/invite/", {
+            team_from: teamId,
+            user_to: userId,
+          })
+          .then((response) => {
+            if (response.status === 200) {
+              this.invites.push({
+                id: response.data.id,
+                teamFrom: teamId,
+                userTo: userId,
+                date: new Date(response.data.date),
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Error sending invite", error);
+          });
       }
     },
   },

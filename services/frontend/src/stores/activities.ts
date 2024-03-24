@@ -1,3 +1,4 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 import type { ActivityInfo } from "@/types";
 import { Activity, activityUnits, activityCalorieConversion } from "@/types";
@@ -11,6 +12,15 @@ export const useActivitiesStore = defineStore("activities", {
   getters: {
     getActivityById: (state) => (id: number) => {
       return state.activities.find((a) => a.id === id);
+    },
+    getUserActivities: (state) => (userId: number) => {
+      return state.activities.filter((a) => a.userId === userId);
+    },
+    getUserActivitiesByDate: (state) => (userId: number, date: Date) => {
+      return state.activities.filter(
+        (a) =>
+          a.userId === userId && a.date.toDateString() === date.toDateString()
+      );
     },
     getUserKm: (state) => (userId: number) => {
       const totalUnits = state.activities
@@ -58,31 +68,75 @@ export const useActivitiesStore = defineStore("activities", {
     },
   },
   actions: {
-    addActivity(
+    async fetchActivities() {
+      return await axios
+        .get("/api/activities/")
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          return null;
+        });
+    },
+    async setActivities(activities: ActivityInfo[]) {
+      this.activities = activities;
+    },
+    async addActivity(
       userId: number | undefined,
       unitCount: number,
       type?: Activity
     ) {
       if (userId === undefined) return;
+      let newActivity;
       if (type === undefined) {
-        const newActivity = {
-          id: this.activities.length + 1,
+        newActivity = {
           type: null,
           unitCount,
           userId,
-          date: new Date(),
-        } as ActivityInfo;
-        this.activities.push(newActivity);
+        };
       } else {
-        const newActivity = {
-          id: this.activities.length + 1,
+        newActivity = {
           type,
           unitCount,
           userId,
-          date: new Date(),
-        } as ActivityInfo;
-        this.activities.push(newActivity);
+        };
       }
+
+      await axios
+        .post(
+          "/api/activity/",
+          JSON.stringify({
+            type: newActivity.type,
+            unit_count: newActivity.unitCount,
+            user_id: newActivity.userId,
+          })
+        )
+        .then((response) => {
+          const activity = response.data;
+          if (activity) {
+            this.activities.push({
+              id: activity.id,
+              type: activity.type,
+              unitCount: activity.unit_count,
+              userId: activity.user_id,
+              date: new Date(activity.date),
+            });
+          } else {
+          }
+        })
+        .catch((error) => {
+          return null;
+        });
+    },
+    async deleteActivity(activityId: number) {
+      await axios
+        .delete(`/api/activity/${activityId}/`)
+        .then((response) => {
+          this.activities = this.activities.filter((a) => a.id !== activityId);
+        })
+        .catch((error) => {
+          return null;
+        });
     },
   },
 });

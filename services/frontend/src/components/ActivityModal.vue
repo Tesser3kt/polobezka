@@ -36,7 +36,7 @@ const warningText = computed(() => {
   return "";
 });
 const showWarning = computed(
-  () => warningText.value !== "" && saveClicked.value,
+  () => warningText.value !== "" && saveClicked.value
 );
 
 const correctActivity = computed(() => {
@@ -48,7 +48,7 @@ const currentActivityUnits = computed(() => {
   return null;
 });
 
-const handleSave = () => {
+const handleSave = async () => {
   saveClicked.value = true;
   if (warningText.value !== "") {
     return;
@@ -57,17 +57,17 @@ const handleSave = () => {
   if (calorieInput.value !== "") {
     const calories = parseInt(calorieInput.value);
     if (calories > 0) {
-      activitiesStore.addActivity(props.userId, calories);
+      await activitiesStore.addActivity(props.userId, calories);
     } else {
       return;
     }
   } else {
     const units = parseInt(unitsInput.value);
     if (units > 0) {
-      activitiesStore.addActivity(
+      await activitiesStore.addActivity(
         props.userId,
         units,
-        activityInput.value as Activity,
+        activityInput.value as Activity
       );
     }
   }

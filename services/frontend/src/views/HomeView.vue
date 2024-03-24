@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import router from "@/router";
 import { useUsersStore } from "@/stores/users";
 import { useClassesStore } from "@/stores/classes";
 import { useTeamsStore } from "@/stores/teams";
@@ -10,29 +11,33 @@ const usersStore = useUsersStore();
 const classesStore = useClassesStore();
 const teamsStore = useTeamsStore();
 
-const currentUser = ref(usersStore.currentUser);
-
 const currentUserClass = computed(() => {
-  if (!currentUser.value) return null;
-  return classesStore.getClassById(currentUser.value.classId);
+  if (!usersStore.currentUser) return null;
+  return classesStore.getClassById(usersStore.currentUser.classId);
 });
 const currentUserTeam = computed(() => {
-  if (!currentUser.value) return null;
-  return teamsStore.getTeamById(currentUser.value.teamId);
+  if (!usersStore.currentUser) return null;
+  return teamsStore.getTeamById(usersStore.currentUser.teamId);
 });
+
+const logout = async () => {
+  await usersStore.logoutUser();
+  router.push("/login");
+};
 </script>
 
 <template>
   <header>
     <AppHeader
-      :user="currentUser?.nickname"
-      :class_="currentUserClass?.name"
-      :team="currentUserTeam?.name"
+      :user="usersStore.currentUser?.nickname"
+      :class_="usersStore.currentUserClass?.name"
+      :team="usersStore.currentUserTeam?.name"
+      @logout="logout"
     />
   </header>
   <section class="kilometres mt-5">
     <AppDashboard
-      :user="currentUser"
+      :user="usersStore.currentUser"
       :class_="currentUserClass"
       :team="currentUserTeam"
     />

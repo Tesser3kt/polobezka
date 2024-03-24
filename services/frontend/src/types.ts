@@ -22,7 +22,7 @@ const activityUnits = {
   [Activity.Bicycle]: "km",
   [Activity.Scooter]: "km",
   [Activity.Unicycle]: "km",
-  [Activity.Stairs]: "patro",
+  [Activity.Stairs]: "pater",
   [Activity.Gym]: "h",
   [Activity.Swimming]: "100 m",
   [Activity.Skis]: "km",
@@ -67,10 +67,10 @@ interface TeamInfo {
 
 interface UserInfo {
   id: number;
-  nickname: string;
+  nickname: string | null;
   email: string;
-  teamId: number;
-  classId: number;
+  teamId: number | null;
+  classId: number | null;
 }
 
 interface ActivityInfo {

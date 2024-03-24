@@ -22,7 +22,7 @@ class Activity(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     type: Optional[str]
     unit_count: int = Field(nullable=False)
-    date: datetime = Field(default=datetime.now, nullable=False)
+    date: datetime = Field(default_factory=datetime.now, nullable=False)
 
     user_id: int = Field(foreign_key="user.id")
     user: "User" = Relationship(back_populates="activities")
@@ -30,7 +30,7 @@ class Activity(SQLModel, table=True):
 
 class Invite(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    date: datetime = Field(default=datetime.now, nullable=False)
+    date: datetime = Field(default_factory=datetime.now, nullable=False)
 
     team_from_id: int = Field(foreign_key="team.id")
     team_from: Team = Relationship(back_populates="invites")

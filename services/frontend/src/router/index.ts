@@ -6,10 +6,15 @@ import HomeView from "@/views/HomeView.vue";
 const requireAuth = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,
-  next: Function,
+  next: Function
 ) => {
   const userStore = useUsersStore();
-  if (to.name !== "login" && !userStore.currentUser) {
+
+  if ($cookies.get("currentUser")) {
+    await userStore.loginUser(parseInt($cookies.get("currentUser")));
+  }
+
+  if (to.name !== "login" && !userStore.isLogged) {
     next({ name: "login" });
   } else {
     next();
@@ -29,6 +34,12 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: () => import("@/views/LoginView.vue"),
+    },
+    {
+      path: "/records",
+      name: "records",
+      component: () => import("@/views/RecordsView.vue"),
+      beforeEnter: requireAuth,
     },
   ],
 });

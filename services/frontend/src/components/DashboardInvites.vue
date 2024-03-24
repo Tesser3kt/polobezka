@@ -14,7 +14,7 @@ const sortedInvites = computed(() =>
   props.invites
     .filter((invite) => invite.teamName !== undefined)
     .sort((a, b) => b.date.getTime() - a.date.getTime())
-    .slice(0, maxInvitesShown),
+    .slice(0, maxInvitesShown)
 );
 
 const inviteDate = (date: Date) => {
@@ -24,11 +24,11 @@ const inviteDate = (date: Date) => {
     hour: date.getHours(),
     minute: date.getMinutes(),
   };
-  return `${day}. ${month}., ${hour}:${minute}`;
+  return `${day}. ${month}., ${hour}:${minute.toString().padStart(2, "0")}`;
 };
 const handleCreateTeam = (name: string) => {
   const createModal = Modal.getInstance(
-    document.getElementById("createTeamModal") as Element,
+    document.getElementById("createTeamModal") as Element
   );
   createModal?.hide();
   emits("create-team", name);

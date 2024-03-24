@@ -1,3 +1,4 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 import { useUsersStore } from "./users";
 import { useInvitesStore } from "./invites";
@@ -19,13 +20,26 @@ export const useTeamsStore = defineStore("teams", {
     },
   },
   actions: {
-    createTeam(userId: number, name: string) {
+    async fetchTeams() {
+      return await axios
+        .get("/api/teams/")
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          return null;
+        });
+    },
+    async setTeams(teams: TeamInfo[]) {
+      this.teams = teams;
+    },
+    async createTeam(userId: number, name: string) {
       const usersStore = useUsersStore();
       const user = usersStore.getUserById(userId);
       if (!user) {
         return;
       }
-      if (user.teamId !== 0) {
+      if (user.teamId) {
         return;
       }
       if (name.length < this.minCharactersInName) {
@@ -34,31 +48,44 @@ export const useTeamsStore = defineStore("teams", {
       if (name.length > this.maxCharactersInName) {
         return;
       }
-      const teamId =
-        this.teams.map((t) => t.id).reduce((a, b) => Math.max(a, b), 0) + 1;
-      this.teams.push({
-        id: teamId,
-        name,
-        memberIds: [userId],
+
+      await axios
+        .post("/api/team/", {
+          name,
+        })
+        .then(async (response) => {
+          console.log(response);
+          if (response.status === 200) {
+            this.teams.push({
+              id: response.data.id,
+              name,
+              memberIds: [userId],
+            });
+            await usersStore.updateUserTeam(userId, response.data.id);
+          }
+        });
+    },
+    async deleteTeam(teamId: number) {
+      await axios.delete(`/api/team/${teamId}/`).then(async (response) => {
+        if (response.status === 200) {
+          this.teams = this.teams.filter((t) => t.id !== teamId);
+
+          const invitesStore = useInvitesStore();
+          await invitesStore.deleteInvitesByTeam(teamId);
+        }
       });
-      usersStore.updateUserTeam(userId, teamId);
     },
-    deleteTeam(teamId: number) {
-      this.teams = this.teams.filter((t) => t.id !== teamId);
-      const invitesStore = useInvitesStore();
-      invitesStore.deleteInvitesByTeam(teamId);
-    },
-    leaveTeam(userId: number, teamId: number) {
+    async leaveTeam(userId: number, teamId: number) {
       const team = this.getTeamById(teamId);
       if (team) {
         team.memberIds = team.memberIds.filter((id) => id !== userId);
       }
       if (team?.memberIds.length === 0) {
-        this.deleteTeam(teamId);
+        await this.deleteTeam(teamId);
       }
 
       const usersStore = useUsersStore();
-      usersStore.updateUserTeam(userId, 0);
+      await usersStore.updateUserTeam(userId, null);
     },
     joinTeam(userId: number, teamId: number) {
       const team = this.getTeamById(teamId);

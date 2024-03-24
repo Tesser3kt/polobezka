@@ -86,6 +86,19 @@ h6 {
   transform: translateX(-50px);
 }
 
+.record-list-move,
+.record-list-enter-active,
+.record-list-leave-active {
+  transition: all 0.8s ease;
+}
+.record-list-leave-active {
+  position: absolute;
+}
+.record-list-enter-from,
+.record-list-leave-to {
+  opacity: 0;
+}
+
 .invites-container,
 .invite-card {
   width: 28rem;

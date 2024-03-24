@@ -1,5 +1,7 @@
-servoces/frontend/.eslintrc.cjs
+services/frontend/.eslintrc.cjs
 services/frontend/.prettierrc.json
 polobezka.code-workspace
 services/frontend/.env
 services/backend/src/__pycache__/main.cpython-311.pyc
+services/backend/.env
+services/backend/src/.env

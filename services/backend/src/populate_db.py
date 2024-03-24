@@ -1,12 +1,17 @@
+import os
 import csv
 from sqlmodel import Session, select
 
-from models import *
+from .models import *
 
 
 def insert_students(engine) -> None:
     students_data = []
-    with open("zaci.csv", "r", encoding="windows-1250") as file:
+    with open(
+        os.path.join(os.path.dirname(__file__), "zaci.csv"),
+        "r",
+        encoding="windows-1250",
+    ) as file:
         reader = csv.reader(file, delimiter=";")
         next(reader)
         for row in reader:
@@ -35,12 +40,17 @@ def insert_students(engine) -> None:
                 class_=class_,
             )
             session.add(student)
-        session.commit()
+            class_.students.append(student)
+            session.commit()
 
 
 def insert_teachers(engine) -> None:
     teachers_data = []
-    with open("ucitele.csv", "r", encoding="windows-1250") as file:
+    with open(
+        os.path.join(os.path.dirname(__file__), "ucitele.csv"),
+        "r",
+        encoding="windows-1250",
+    ) as file:
         reader = csv.reader(file, delimiter=";")
         next(reader)
         for row in reader:
