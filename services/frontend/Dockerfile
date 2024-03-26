@@ -1,12 +1,16 @@
-FROM node:latest as build-stage
+FROM node:lts-alpine
+
 WORKDIR /app
-COPY package*.json ./
+
+ENV PATH /app/node_modules/.bin:$PATH
+
+RUN npm install @vue/cli@5.0.8 -g
+
+COPY package.json .
+COPY package-lock.json .
 RUN npm install
 COPY . .
 RUN npm run build
+EXPOSE 8080
 
-FROM nginx as production-stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "preview"]
