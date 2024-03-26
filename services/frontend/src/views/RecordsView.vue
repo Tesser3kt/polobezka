@@ -7,6 +7,7 @@ import { useTeamsStore } from "@/stores/teams";
 import { useActivitiesStore } from "@/stores/activities";
 import { activityUnits } from "@/types";
 import AppHeader from "@/components/AppHeader.vue";
+import type { WeekInfo } from "@/types";
 
 const usersStore = useUsersStore();
 const classesStore = useClassesStore();
@@ -37,7 +38,7 @@ const userActivitiesByWeek = computed(() => {
   // Group activities by week
   const now = new Date();
   const start = new Date(2024, 2, 21);
-  let weeks = [];
+  let weeks: WeekInfo[] = [];
   for (let w = start; w <= now; w.setDate(w.getDate() + 7)) {
     weeks.push({
       start: new Date(w),

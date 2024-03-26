@@ -1,7 +1,11 @@
+import { inject } from "vue";
 import axios from "axios";
 import { googleLogout } from "vue3-google-login";
 import { defineStore } from "pinia";
 import type { UserInfo } from "@/types";
+import type { VueCookies } from "vue-cookies";
+
+const $cookies = inject<VueCookies>("$cookies");
 
 export const useUsersStore = defineStore("users", {
   state: () => ({

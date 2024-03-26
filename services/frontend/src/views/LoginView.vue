@@ -44,7 +44,7 @@ const nicknameSet = async (nickname: string) => {
 };
 
 const callback = async (response) => {
-  const userData = decodeCredential(response.credential);
+  const userData = decodeCredential(response.credential) as any;
   if (!userData) {
     showError.value = true;
     errorMessage.value = "Přihlášení selhalo.";

@@ -7,10 +7,13 @@ export const useClassesStore = defineStore("classes", {
     classes: [] as ClassInfo[],
   }),
   getters: {
-    getClassById: (state) => (id: number) => {
+    getClassById: (state) => (id: number | null) => {
       return state.classes.find((c) => c.id === id);
     },
-    getUserClassById: (state) => (userId: number) => {
+    getUserClassById: (state) => (userId: number | null) => {
+      if (!userId) {
+        return null;
+      }
       return state.classes.find((c) => c.studentIds.includes(userId));
     },
   },

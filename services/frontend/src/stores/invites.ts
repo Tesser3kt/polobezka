@@ -9,20 +9,21 @@ export const useInvitesStore = defineStore("invites", {
     maxInvitesFromTeam: 5,
   }),
   getters: {
-    getUserInvites: (state) => (userId: number) => {
+    getUserInvites: (state) => (userId: number | null) => {
       return state.invites.filter((i) => i.userTo === userId);
     },
-    getInviteById: (state) => (id: number) => {
+    getInviteById: (state) => (id: number | null) => {
       return state.invites.find((i) => i.id === id);
     },
-    getTeamInvites: (state) => (teamId: number) => {
+    getTeamInvites: (state) => (teamId: number | null) => {
       return state.invites.filter((i) => i.teamFrom === teamId);
     },
-    getInviteByTeamAndUser: (state) => (teamId: number, userId: number) => {
-      return state.invites.find(
-        (i) => i.teamFrom === teamId && i.userTo === userId
-      );
-    },
+    getInviteByTeamAndUser:
+      (state) => (teamId: number | null, userId: number | null) => {
+        return state.invites.find(
+          (i) => i.teamFrom === teamId && i.userTo === userId
+        );
+      },
   },
   actions: {
     async fetchInvites() {

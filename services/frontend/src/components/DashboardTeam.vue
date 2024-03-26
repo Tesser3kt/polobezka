@@ -5,9 +5,9 @@ import YesNoModal from "./YesNoModal.vue";
 import InviteModal from "./InviteModal.vue";
 
 const props = defineProps<{
-  user: { nickname: string; km: number | null } | null;
+  user: { nickname: string | null; km: number | null } | null;
   teamName: string | undefined;
-  team: { nickname: string | undefined; km: number }[] | null;
+  team: { nickname: string | null | undefined; km: number }[] | null;
   maxTeamMembers: number;
 }>();
 const emits = defineEmits(["leave-team", "invite-user"]);
@@ -20,14 +20,14 @@ const teamFull = computed(() => {
 
 const leaveTeamSignal = (): void => {
   const leaveTeamModal = Modal.getInstance(
-    document.getElementById("leaveTeamModal") as Element,
+    document.getElementById("leaveTeamModal") as Element
   );
   leaveTeamModal?.hide();
   emits("leave-team");
 };
 const inviteUserSignal = (nickname: string): void => {
   const inviteModal = Modal.getInstance(
-    document.getElementById("inviteModal") as Element,
+    document.getElementById("inviteModal") as Element
   );
   inviteModal?.hide();
   emits("invite-user", nickname);
@@ -39,7 +39,7 @@ watch(
     if (newVal !== oldVal) {
       prevUserKm.value = oldVal || 0;
     }
-  },
+  }
 );
 </script>
 <template>
@@ -53,8 +53,8 @@ watch(
       <div class="container-fluid py-2">
         <div class="row row-gap-4">
           <div
-            v-for="member in props.team"
-            :key="member.nickname"
+            v-for="(member, index) in props.team"
+            :key="index"
             class="member-header col-12 col-sm-6 px-sm-3 col-md-4 px-md-2 col-lg-3 px-lg-2 px-xl-4 px-xxl-5"
           >
             <div class="card">

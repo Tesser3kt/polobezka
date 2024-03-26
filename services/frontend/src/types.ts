@@ -85,5 +85,18 @@ interface InviteInfo {
   date: Date;
 }
 
-export type { ClassInfo, TeamInfo, UserInfo, ActivityInfo, InviteInfo };
+interface WeekInfo {
+  start: Date;
+  end: Date;
+  activities: ActivityInfo[];
+}
+
+export type {
+  ClassInfo,
+  TeamInfo,
+  UserInfo,
+  ActivityInfo,
+  InviteInfo,
+  WeekInfo,
+};
 export { Activity, activityUnits, activityCalorieConversion };

@@ -79,7 +79,7 @@ const clearForm = () => {
                 required
               />
               <datalist id="nicknameList">
-                <option v-for="nickname in userNicknames" :key="nickname">
+                <option v-for="(nickname, index) in userNicknames" :key="index">
                   {{ nickname }}
                 </option>
               </datalist>

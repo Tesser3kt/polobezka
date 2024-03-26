@@ -7,7 +7,7 @@ import ErrorModal from "./ErrorModal.vue";
 import { useUsersStore } from "@/stores/users";
 
 const props = defineProps<{
-  user?: string;
+  user: string | null | undefined;
   class_?: string;
   team?: string;
 }>();

@@ -12,10 +12,13 @@ export const useTeamsStore = defineStore("teams", {
     maxCharactersInName: 16,
   }),
   getters: {
-    getTeamById: (state) => (id: number) => {
+    getTeamById: (state) => (id: number | null) => {
       return state.teams.find((t) => t.id === id);
     },
-    getUserTeamById: (state) => (userId: number) => {
+    getUserTeamById: (state) => (userId: number | null) => {
+      if (!userId) {
+        return null;
+      }
       return state.teams.find((t) => t.memberIds.includes(userId));
     },
   },
