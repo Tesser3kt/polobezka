@@ -3,7 +3,6 @@ import axios from "axios";
 import { googleLogout } from "vue3-google-login";
 import { defineStore } from "pinia";
 import type { UserInfo } from "@/types";
-import type { VueCookies } from "vue-cookies";
 
 export const useUsersStore = defineStore("users", {
   state: () => ({
@@ -87,7 +86,6 @@ export const useUsersStore = defineStore("users", {
             if (!this.currentUser) {
               return;
             }
-            const $cookies = inject<VueCookies>("$cookies");
             $cookies?.set("currentUser", this.currentUser?.id, "1d");
           }
         })
@@ -97,7 +95,7 @@ export const useUsersStore = defineStore("users", {
     },
     async logoutUser() {
       this.currentUser = undefined;
-      this.$cookies?.remove("currentUser");
+      $cookies?.remove("currentUser");
       googleLogout();
     },
     async updateUserTeam(userId: number, teamId: number | null) {

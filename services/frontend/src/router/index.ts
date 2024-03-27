@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import type { RouteLocationNormalized } from "vue-router";
 import { useUsersStore } from "@/stores/users";
 import HomeView from "@/views/HomeView.vue";
-import type { VueCookies } from "vue-cookies";
 
 const requireAuth = async (
   to: RouteLocationNormalized,
@@ -12,7 +11,6 @@ const requireAuth = async (
 ) => {
   const userStore = useUsersStore();
 
-  const $cookies = inject<VueCookies>("$cookies");
   if ($cookies?.get("currentUser")) {
     await userStore.loginUser(parseInt($cookies.get("currentUser")));
   }

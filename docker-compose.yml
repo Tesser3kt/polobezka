@@ -1,19 +1,38 @@
 version: "3.8"
 
 services:
+  frontend:
+    build: ./services/frontend
+    volumes:
+      - "./services/frontend:/app"
+    ports:
+      - 8080:8080
+
+  db:
+    image: mysql
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=polobezka
+      - MYSQL_ROOT_PASSWORD=Ad031169Kle9410
+    ports:
+      - 3307:3306
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
   backend:
+    depends_on:
+      - db
     build: ./services/backend
     ports:
       - 5000:5000
     volumes:
       - "./services/backend:/app"
     command: uvicorn src.main:app --reload --host 0.0.0.0 --port 5000
-    network_mode: host
+    network_mode: "host"
 
-  frontend:
-    build: ./services/frontend
-    volumes:
-      - "./services/frontend:/app"
-      - "/app/node_modules"
-    ports:
-      - 8080:8080
+volumes:
+  db:
+    driver: local

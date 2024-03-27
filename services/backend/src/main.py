@@ -30,6 +30,7 @@ DB_USERNAME = os.getenv("DB_USERNAME")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 DB_DATABASE = os.getenv("DB_DATABASE")
+DB_PORT = os.getenv("DB_PORT")
 
 url_object = URL.create(
     "mysql+pymysql",
@@ -37,6 +38,7 @@ url_object = URL.create(
     password=DB_PASSWORD,
     host=DB_HOST,
     database=DB_DATABASE,
+    port=DB_PORT,
 )
 engine = create_engine(url_object)
 tz = pytz.timezone("Europe/Prague")

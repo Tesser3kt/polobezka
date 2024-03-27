@@ -37,18 +37,19 @@ const userActivitiesByWeek = computed(() => {
 
   // Group activities by week
   const now = new Date();
-  const start = new Date(2024, 2, 21);
+  const start = new Date(2024, 2, 25);
   let weeks: WeekInfo[] = [];
-  for (let w = start; w <= now; w.setDate(w.getDate() + 7)) {
+  for (let w = start; w <= new Date(2024, 5, 10); w.setDate(w.getDate() + 7)) {
     weeks.push({
       start: new Date(w),
       end: new Date(w.getFullYear(), w.getMonth(), w.getDate() + 6),
-      activities: sortedActivities.filter(
-        (a) =>
+      activities: sortedActivities.filter((a) => {
+        return (
           a.date.getTime() >= w.getTime() &&
-          a.date.getTime() <=
-            new Date(w.getFullYear(), w.getMonth(), w.getDate() + 6).getTime()
-      ),
+          a.date.getTime() <
+            new Date(w.getFullYear(), w.getMonth(), w.getDate() + 7).getTime()
+        );
+      }),
     });
   }
 
