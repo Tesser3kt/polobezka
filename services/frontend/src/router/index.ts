@@ -4,6 +4,8 @@ import type { RouteLocationNormalized } from "vue-router";
 import { useUsersStore } from "@/stores/users";
 import HomeView from "@/views/HomeView.vue";
 
+declare const $cookies: any;
+
 const requireAuth = async (
   to: RouteLocationNormalized,
   from: RouteLocationNormalized,

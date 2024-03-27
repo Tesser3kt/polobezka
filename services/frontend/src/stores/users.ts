@@ -4,6 +4,8 @@ import { googleLogout } from "vue3-google-login";
 import { defineStore } from "pinia";
 import type { UserInfo } from "@/types";
 
+declare const $cookies: any;
+
 export const useUsersStore = defineStore("users", {
   state: () => ({
     users: [] as UserInfo[],
