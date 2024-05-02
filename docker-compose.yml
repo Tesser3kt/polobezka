@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   frontend:
+    image: tesserekt/polobezka_1:frontend
     build: ./services/frontend
     volumes:
       - "./services/frontend:/app"
@@ -17,12 +18,13 @@ services:
       - MYSQL_DATABASE=polobezka
       - MYSQL_ROOT_PASSWORD=Ad031169Kle9410
     ports:
-      - 3307:3306
+      - 3310:3306
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   backend:
+    image: tesserekt/polobezka_1:backend
     depends_on:
       - db
     build: ./services/backend

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { Modal } from "bootstrap";
-import { Activity, activityUnits } from "@/types";
+import { Activity, activityUnits, activityCalorieConversion } from "@/types";
 import { useActivitiesStore } from "@/stores/activities";
 
 const activitiesStore = useActivitiesStore();
@@ -33,6 +33,25 @@ const warningText = computed(() => {
   if (unitsInput.value !== "" && parseInt(unitsInput.value) <= 0) {
     return "Počet jednotek musí být kladné číslo.";
   }
+
+  const userCalories = activitiesStore.getUserDailyCalories(props.userId);
+  console.log(userCalories);
+  const maxCalories = activitiesStore.dailyMaxCalories;
+  if (
+    calorieInput.value !== "" &&
+    userCalories + parseInt(calorieInput.value) > maxCalories
+  ) {
+    return "Denní limit spálených kalorií je nastaven na 4500 kcal.";
+  }
+  if (
+    unitsInput.value !== "" &&
+    userCalories +
+      parseInt(unitsInput.value) *
+        activityCalorieConversion[activityInput.value as Activity] >
+      maxCalories
+  ) {
+    return "Denní limit spálených kalorií je nastaven na 4500 kcal.";
+  }
   return "";
 });
 const showWarning = computed(
@@ -56,6 +75,11 @@ const handleSave = async () => {
 
   if (calorieInput.value !== "") {
     const calories = parseInt(calorieInput.value);
+    const userCalories = activitiesStore.getUserDailyCalories(props.userId);
+    const maxCalories = activitiesStore.dailyMaxCalories;
+    if (userCalories + calories > maxCalories) {
+      return;
+    }
     if (calories > 0) {
       await activitiesStore.addActivity(props.userId, calories);
     } else {
@@ -64,6 +88,13 @@ const handleSave = async () => {
   } else {
     const units = parseInt(unitsInput.value);
     if (units > 0) {
+      const calories =
+        units * activityCalorieConversion[activityInput.value as Activity];
+      const userCalories = activitiesStore.getUserDailyCalories(props.userId);
+      const maxCalories = activitiesStore.dailyMaxCalories;
+      if (userCalories + calories > maxCalories) {
+        return;
+      }
       await activitiesStore.addActivity(
         props.userId,
         units,

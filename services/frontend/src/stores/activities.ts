@@ -1,13 +1,14 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 import type { ActivityInfo } from "@/types";
-import { Activity, activityUnits, activityCalorieConversion } from "@/types";
+import { Activity, activityCalorieConversion } from "@/types";
 import { useClassesStore } from "@/stores/classes";
 import { useTeamsStore } from "@/stores/teams";
 
 export const useActivitiesStore = defineStore("activities", {
   state: () => ({
     activities: [] as ActivityInfo[],
+    dailyMaxCalories: 4500,
   }),
   getters: {
     getActivityById: (state) => (id: number) => {
@@ -65,6 +66,17 @@ export const useActivitiesStore = defineStore("activities", {
       return Math.round(
         totalUnits / activityCalorieConversion[Activity.Walking]
       );
+    },
+    getUserDailyCalories: (state) => (userId: number | undefined) => {
+      if (userId === undefined) return 0;
+      const totalUnits = state.activities
+        .filter((a) => a.userId === userId)
+        .filter((a) => a.date.toDateString() === new Date().toDateString())
+        .reduce((acc, a) => {
+          if (a.type === null) return acc + a.unitCount;
+          return acc + a.unitCount * activityCalorieConversion[a.type];
+        }, 0);
+      return Math.round(totalUnits);
     },
   },
   actions: {

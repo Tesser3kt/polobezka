@@ -40,7 +40,7 @@ const activityCalorieConversion = {
   [Activity.Unicycle]: 120,
   [Activity.Stairs]: 0.5,
   [Activity.Gym]: 620,
-  [Activity.Swimming]: 820,
+  [Activity.Swimming]: 66,
   [Activity.Volleyball]: 641,
   [Activity.Basketball]: 541,
   [Activity.Football]: 600,
