@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import logoUrl from "@/assets/imgs/logo.png";
 import { Modal } from "bootstrap";
 import NicknameModal from "./NicknameModal.vue";
@@ -11,6 +12,8 @@ const props = defineProps<{
   class_?: string;
   team?: string;
 }>();
+
+const route = useRoute();
 
 const usersStore = useUsersStore();
 
@@ -79,13 +82,27 @@ watch(
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link :to="{ name: 'home' }" class="nav-link active"
+            <router-link
+              :to="{ name: 'home' }"
+              class="nav-link"
+              :class="{ active: route.name === 'home' }"
               >Domů</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link :to="{ name: 'records' }" class="nav-link active"
+            <router-link
+              :to="{ name: 'records' }"
+              class="nav-link"
+              :class="{ active: route.name === 'records' }"
               >Záznamy</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link
+              :to="{ name: 'milestones' }"
+              class="nav-link"
+              :class="{ active: route.name === 'milestones' }"
+              >Milníky</router-link
             >
           </li>
         </ul>

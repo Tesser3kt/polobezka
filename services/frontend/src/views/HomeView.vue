@@ -6,6 +6,7 @@ import { useClassesStore } from "@/stores/classes";
 import { useTeamsStore } from "@/stores/teams";
 import { useActivitiesStore } from "@/stores/activities";
 import { useInvitesStore } from "@/stores/invites";
+import { useMilestonesStore } from "@/stores/milestones";
 import AppHeader from "@/components/AppHeader.vue";
 import AppDashboard from "@/components/AppDashboard.vue";
 import type {
@@ -22,6 +23,7 @@ const classesStore = useClassesStore();
 const teamsStore = useTeamsStore();
 const activitiesStore = useActivitiesStore();
 const invitesStore = useInvitesStore();
+const milestonesStore = useMilestonesStore();
 
 const loading = ref(true);
 const error = ref(false);
@@ -163,12 +165,35 @@ const fetchInvites = async () => {
   }
 };
 
+const fetchMilestones = async () => {
+  const milestonesData = await milestonesStore.fetchMilestones();
+  if (!milestonesData) {
+    error.value = true;
+    errorMessage.value = "Načtení milníků selhalo.";
+    return;
+  }
+
+  try {
+    const milestones = milestonesData.map((milestone) => {
+      return {
+        number: milestone.number,
+        userId: milestone.user_id,
+      };
+    });
+    await milestonesStore.setMilestones(milestones);
+  } catch (e) {
+    error.value = true;
+    errorMessage.value = "Načtení milníků selhalo.";
+  }
+};
+
 const fetchData = async () => {
   await fetchUsers();
   await fetchClasses();
   await fetchTeams();
   await fetchActivities();
   await fetchInvites();
+  await fetchMilestones();
   usersStore.resetCurrentUser();
   loading.value = false;
 };

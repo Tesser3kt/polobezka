@@ -84,6 +84,13 @@ async def read_invites():
     return invites
 
 
+@app.get("/api/milestones/")
+async def read_milestones():
+    with Session(engine) as session:
+        milestones = session.exec(select(Milestone)).all()
+    return milestones
+
+
 @app.get("/api/user/{id}/")
 async def read_user(id: int):
     with Session(engine) as session:
@@ -268,6 +275,40 @@ async def delete_invite(invite_id: int):
             return {"message": "Pozvánka byla smazána."}
         else:
             return {"error": "Pozvánka nebyla nalezena."}
+
+
+@app.post("/api/milestone/")
+async def create_milestone(request: Request):
+    data = await request.json()
+
+    with Session(engine) as session:
+        try:
+            milestone = Milestone(**data)
+            session.add(milestone)
+            session.commit()
+            return {
+                "number": milestone.number,
+                "user_id": milestone.user_id,
+            }
+        except KeyError:
+            return {"error": "Chybějící data."}
+
+
+@app.delete("/api/milestone/{user_id}/{milestone_number}/")
+async def delete_milestone(user_id: int, milestone_number: int):
+    with Session(engine) as session:
+        milestone = session.exec(
+            select(Milestone).where(
+                Milestone.user_id == user_id and Milestone.number == milestone_number
+            )
+        ).first()
+        print(milestone.number, milestone.user_id)
+        if milestone:
+            session.delete(milestone)
+            session.commit()
+            return {"message": "Milník byl smazán."}
+        else:
+            return {"error": "Milník nebyl nalezen."}
 
 
 if __name__ == "__main__":

@@ -122,3 +122,13 @@ h6 {
 .error-modal-content {
   outline: 2px solid var(--bs-danger);
 }
+
+.milestones-wrapper {
+  max-width: 40rem;
+  @include media-breakpoint-down(sm) {
+    max-width: 25rem;
+  }
+}
+.card-text {
+  text-align: justify;
+}

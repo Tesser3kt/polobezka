@@ -51,3 +51,10 @@ class User(SQLModel, table=True):
 
     activities: List[Activity] = Relationship(back_populates="user")
     invites: List[Invite] = Relationship(back_populates="user_to")
+
+
+class Milestone(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    number: int = Field(nullable=False)
+
+    user_id: int = Field(foreign_key="user.id")
